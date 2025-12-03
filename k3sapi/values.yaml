@@ -1,0 +1,25 @@
+replicaCount: 3
+
+image:
+  repository: leoff00/k3s-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 4000
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+config:
+  APP_ENV: "dev"
+  APP_PORT: "4000"
+
+secret:
+  DB_PASSWORD: "changeme"

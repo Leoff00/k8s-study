@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "k3sapi.fullname" . }}
+  labels:
+    app: {{ include "k3sapi.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "k3sapi.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "k3sapi.name" . }}
+    spec:
+      containers:
+        - name: k3sapi
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "k3sapi.fullname" . }}-config
+            - secretRef:
+                name: {{ include "k3sapi.fullname" . }}-secret
